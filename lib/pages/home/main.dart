@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/main/missions.dart';
-import 'package:greenify/pages/home/main/nearby.dart';
 import 'package:greenify/pages/home/main/redeem_list.dart';
+import 'package:greenify/pages/home/missions.dart';
+import 'package:greenify/pages/home/nearby.dart';
+import 'package:greenify/pages/home/mission_list.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -38,7 +39,8 @@ class _MainState extends State<MainPage> {
                       padding: EdgeInsets.only(top: 35, bottom: 10),
                       child: Container(
                         height: 50,
-                        child: new Image.asset('assets/graphics/greenify_logo.png'),
+                        child: new Image.asset(
+                            'assets/graphics/greenify_logo.png'),
                       ),
                     ),
                     Padding(
@@ -133,7 +135,7 @@ class _MainState extends State<MainPage> {
     return FlatButton(
       onPressed: () => {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RedeemList()))
+            context, MaterialPageRoute(builder: (context) => MissionList()))
       },
       child: Column(
         children: <Widget>[

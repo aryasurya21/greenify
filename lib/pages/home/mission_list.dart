@@ -1,74 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/main/redeem_list.dart';
-import 'package:greenify/pages/home/mission_list.dart';
 
-class Missions extends StatefulWidget {
-  Missions({Key key}) : super(key: key);
+class MissionList extends StatefulWidget {
+  MissionList({Key key}) : super(key: key);
 
   @override
-  _MissionsState createState() => _MissionsState();
+  _MissionListState createState() => _MissionListState();
 }
 
-class _MissionsState extends State<Missions> {
+class _MissionListState extends State<MissionList> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10)),
-        color: Color.fromRGBO(63, 63, 63, 1),
-      ),
-      width: MediaQuery.of(context).size.width - 20,
-      child: Column(
-        children: <Widget>[_missionTitle()],
-      ),
-    );
-  }
-
-  Widget _missionTitle() {
-    return Padding(
-        padding: EdgeInsets.only(left: 15, top: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[_missionHeader(), ..._missionItems()],
-        ));
-  }
-
-  Widget _missionHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Missions",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              textScaleFactor: 1.7,
-            ),
-            Text("Are you ready to make the world greener?",
-                style: TextStyle(color: Colors.white)),
-          ],
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Redeem"),
         ),
-        FlatButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MissionList()));
-          },
-          child: Text(
-            "MORE",
-            style: TextStyle(color: Colors.white),
-            textScaleFactor: 1.4,
-          ),
-        )
-      ],
-    );
+        body: Container(color: Colors.black, child: _listView()));
+  }
+
+  Container _listView() {
+    return Container(
+        child: ListView(
+      padding: EdgeInsets.all(10),
+      children: _missionItems(),
+    ));
   }
 
   List<Widget> _missionItems() {
@@ -94,6 +48,9 @@ class _MissionsState extends State<Missions> {
     for (var i = 0; i < itemData.length; i++) {
       items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
           itemData[i]["description"]));
+      items.add(SizedBox(
+        height: 20,
+      ));
     }
 
     return items;
@@ -101,8 +58,17 @@ class _MissionsState extends State<Missions> {
 
   Widget _missionItem(String title, String prize, String description) {
     return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          color: Color.fromRGBO(63, 63, 63, 1)),
+      width: MediaQuery.of(context).size.width - 10,
+      // color: Color.fromRGBO(63, 63, 63, 1),
       child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
+          padding: EdgeInsets.only(top: 10, right: 15, left: 15, bottom: 10),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -114,7 +80,7 @@ class _MissionsState extends State<Missions> {
                     title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
-                    textScaleFactor: 1.3,
+                    textScaleFactor: 1.7,
                   ),
                   Text(
                     prize,
