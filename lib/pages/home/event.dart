@@ -6,15 +6,19 @@ class EventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Event List"),
-        backgroundColor: Colors.black,
-      ),
       body: Container(
         color: Colors.black,
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 35, bottom: 5),
+                child: Container(
+                  height: 65,
+                  child: new Image.asset(
+                      'assets/graphics/events.png'),
+                ),
+              ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
                 height: MediaQuery.of(context).size.height - 90,

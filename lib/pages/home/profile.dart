@@ -116,6 +116,14 @@ class _EditProfileState extends State<EditProfilePage>{
             children: <Widget>[
               new Column(
                 children: <Widget>[
+                  new Padding(
+                    padding: EdgeInsets.only(top: 35, bottom: 5),
+                    child: Container(
+                      height: 65,
+                      child: new Image.asset(
+                          'assets/graphics/settings.png'),
+                    ),
+                  ),
                   new Container(
                     child: new StreamBuilder(
                       stream: Firestore.instance.collection('users').where("auth_uid", isEqualTo: _userID).snapshots(),

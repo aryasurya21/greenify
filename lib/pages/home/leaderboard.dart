@@ -9,19 +9,12 @@ class Leaderboard extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Column(
         children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 30, bottom: 5),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  "Period",
-                  style: TextStyle(color: Colors.white, fontSize: 40),
-                ),
-                Text(
-                  "15 June 2020 - 15 July 2020",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ],
+          Padding(
+            padding: EdgeInsets.only(top: 40, bottom: 5),
+            child: Container(
+              height: 45,
+              child: new Image.asset(
+                  'assets/graphics/leaderboard.png'),
             ),
           ),
           Expanded(
