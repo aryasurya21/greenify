@@ -24,16 +24,22 @@ class _MainState extends State<MainPage> {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Container(
-        height: MediaQuery.of(context).size.height + 100,
+        height: MediaQuery.of(context).size.height + 180,
         child: Stack(
           children: <Widget>[
             Positioned(
               child: Container(
-                height: MediaQuery.of(context).size.height + 100,
+                height: MediaQuery.of(context).size.height + 180,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 35, bottom: 10),
+                      child: Container(
+                        height: 50,
+                        child: new Image.asset('assets/graphics/greenify_logo.png'),
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       child: _profileInformation(),
