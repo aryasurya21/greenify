@@ -4,6 +4,7 @@ import 'package:greenify/pages/home/main/missions.dart';
 import 'package:greenify/pages/home/main/nearby.dart';
 import 'package:greenify/pages/home/main/notifications.dart';
 import 'package:greenify/pages/home/main/redeem_list.dart';
+import 'package:greenify/pages/home/main/scanner.dart';
 import 'package:greenify/util/session_util.dart';
 
 class MainPage extends StatefulWidget {
@@ -29,56 +30,59 @@ class _MainState extends State<MainPage> {
     return Container(
       color: Colors.black,
       child: Column(
-        children: <Widget>[Expanded(child: _renderBody(context))],
-      ),
-    );
-  }
-
-  Widget _renderBody(BuildContext context) {
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        height: MediaQuery.of(context).size.height + 185,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
+        children: <Widget>[
+          Expanded(child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Container(
                 height: MediaQuery.of(context).size.height + 185,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
+                child: Stack(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 35, bottom: 10),
-                      child: Container(
-                        height: 50,
-                        child: new Image.asset(
-                            'assets/graphics/greenify_logo.png'),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                    Positioned(
                       child: new StreamBuilder(
                         stream: Firestore.instance.collection('users').where("auth_uid", isEqualTo: _userID).snapshots(),
                         builder: (context, snapshot){
                           if(!snapshot.hasData) return new Container();
-                          return _profileInformation(snapshot.data.documents[0]);
+                          return _renderBody(snapshot.data.documents[0]);
                         }
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Missions(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Nearby(),
                     ),
                   ],
                 ),
               ),
             )
-          ],
-        ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _renderBody(DocumentSnapshot document) {
+    return Container(
+      height: MediaQuery.of(context).size.height + 185,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 35, bottom: 10),
+            child: Container(
+              height: 50,
+              child: new Image.asset(
+                  'assets/graphics/greenify_logo.png'),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: _profileInformation(document)
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: Missions(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: Nearby(),
+          ),
+        ],
       ),
     );
   }
@@ -260,9 +264,16 @@ class _MainState extends State<MainPage> {
             _nameProfile(document)
           ],
         ),
-        IconTheme(
+        FlatButton(
+          onPressed: () => {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ScannerPage()))
+          },
+          child: IconTheme(
             data: IconThemeData(color: Colors.white, size: 30),
-            child: Icon(Icons.settings_overscan)),
+            child: Icon(Icons.settings_overscan)
+          ),
+        ),
       ],
     ));
   }
