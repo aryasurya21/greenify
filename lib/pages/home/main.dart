@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/main/missions.dart';
 import 'package:greenify/pages/home/main/nearby.dart';
-import 'package:greenify/pages/home/main/mission_list.dart';
 import 'package:greenify/pages/home/main/redeem_list.dart';
 
 class MainPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class _MainState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
-      child: Stack(
+      child: Column(
         children: <Widget>[Expanded(child: _renderBody())],
       ),
     );
