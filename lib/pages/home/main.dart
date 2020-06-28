@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/main/missions.dart';
 import 'package:greenify/pages/home/main/nearby.dart';
 import 'package:greenify/pages/home/main/mission_list.dart';
+import 'package:greenify/pages/home/main/notiifications.dart';
 import 'package:greenify/pages/home/main/redeem_list.dart';
 
 class MainPage extends StatefulWidget {
@@ -154,13 +155,17 @@ class _MainState extends State<MainPage> {
 
   Widget _historyButton() {
     return FlatButton(
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Notifications()));
+      },
       child: Column(
         children: <Widget>[
           IconTheme(
               data: IconThemeData(color: Colors.white, size: 25),
-              child: Icon(Icons.history)),
+              child: Icon(Icons.notifications)),
           Text(
-            "History",
+            "Notifications",
             style: TextStyle(color: Colors.white),
             textScaleFactor: 1,
           )
