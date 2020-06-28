@@ -6,6 +6,7 @@ class EventDetailCard extends StatelessWidget {
   final int idx;
   EventDetailCard(this.idx);
 
+  Widget CardPicture = 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,7 +26,7 @@ class EventDetailCard extends StatelessWidget {
                   color: Colors.greenAccent,
                   height: 150,
                   width: 100,
-                  child: new Image.asset('assets/graphics/wwf.png'),
+                  child: new Image.asset('assets/graphics/greenify_logo.png'),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
