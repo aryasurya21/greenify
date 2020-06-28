@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:greenify/pages/auth/register.dart';
-import 'package:greenify/pages/home/main_page.dart';
+import 'package:greenify/pages/home.dart';
 import 'package:greenify/util/session_util.dart';
 
 class LoginPage extends StatefulWidget {
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => MainPage(
+                  builder: (context) => HomePage(
                         title: "Home",
                       )));
         } else {

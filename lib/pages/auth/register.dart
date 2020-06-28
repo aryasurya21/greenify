@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:greenify/pages/auth/login.dart';
@@ -149,12 +150,23 @@ class _RegisterPageState extends State<RegisterPage> {
     if(formState.validate()){
       formState.save();
       try{
+        // Register user
         AuthResult authResult  = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _email,
           password: _password
         );
         FirebaseUser user = authResult.user;
+
+        // Send verification email
         user.sendEmailVerification();
+
+        // Save to users with custom document ID
+        Firestore.instance.collection("users").document(user.uid)
+          .setData({
+            "email": _email
+          });
+
+        // Go to login page
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
       catch(signUpError){

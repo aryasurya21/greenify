@@ -18,10 +18,9 @@ Future<bool> removeUserLogin() async{
   return prefs.setString("user", "");
 }
 
-Future<DocumentSnapshot> getUserByAuthUID(String auth_uid) async{
-  Query user = Firestore.instance.collection('users').where("auth_uid", isEqualTo: auth_uid);
-  QuerySnapshot data = await user.getDocuments();
-  return data.documents[0];
+Future<DocumentSnapshot> getUserByAuthUID(String authUid) async{
+  var data = Firestore.instance.collection('users').document(authUid).get();
+  return data;
 }
 
 Future<DocumentSnapshot> getUserByUsername(String username) async{
