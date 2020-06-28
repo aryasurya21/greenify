@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Nearby extends StatefulWidget {
@@ -30,19 +31,22 @@ class _NearbyState extends State<Nearby> {
 
   Widget _missionList() {
     return Container(
-        height: 190,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            _missionItem(),
-            _missionItem(),
-            _missionItem(),
-            _missionItem(),
-          ],
-        ));
+      height: 190,
+      child: new StreamBuilder(
+        stream: Firestore.instance.collection('merchants').snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return new Container();
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) => _missionItem(snapshot.data.documents[index]),
+          );
+        }
+      ),
+    );
   }
 
-  Widget _missionItem() {
+  Widget _missionItem(DocumentSnapshot document) {
     return Container(
       width: 190,
       child: Padding(
@@ -51,7 +55,7 @@ class _NearbyState extends State<Nearby> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: NetworkImage("https://i.imgur.com/BoN9kdC.png"))),
+                    image: NetworkImage(document['image_url'].toString()))),
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -63,7 +67,7 @@ class _NearbyState extends State<Nearby> {
                       color: Color.fromRGBO(63, 63, 63, 0.5),
                       child: Center(
                         child: Text(
-                          "Indomaret",
+                          document['name'].toString(),
                           style: TextStyle(color: Colors.white),
                         ),
                       ))
