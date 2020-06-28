@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,25 @@ class QRScanner extends StatefulWidget {
 
 class _QRScannerState extends State<QRScanner> {
   String barcode = "";
+  bool _visible = true;
+
+  Timer _animationTimer;
+
+  @override
+  void dispose() {
+    _animationTimer?.cancel();
+    _animationTimer = null;
+    super.dispose();
+  }
+
+  _QRScannerState() {
+    _animationTimer = Timer.periodic(
+      Duration(milliseconds: 700), 
+      (Timer t) => setState((){
+        _visible = !_visible;
+      })
+    );
+  }
 
   void _goHome() {
     Navigator.pop(context);
@@ -23,10 +44,6 @@ class _QRScannerState extends State<QRScanner> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Scan'),
-          backgroundColor: Colors.black,
-        ),
         body: Container(
           color: Colors.black,
           child: Center(
@@ -38,9 +55,16 @@ class _QRScannerState extends State<QRScanner> {
                   height: MediaQuery.of(context).size.height - 200,
                   child: RaisedButton(
                     color: Colors.black,
-                    child: Text(
-                      'Tap Me to Scan',
-                      style: GoogleFonts.pressStart2p(color: Colors.white),
+                    child: AnimatedOpacity(
+                      opacity: _visible ? 1.0 : 0.0,
+                      duration: Duration(milliseconds: 500),
+                      child: Text(
+                        'Tap Me to Scan',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.pressStart2p(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       try {
