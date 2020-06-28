@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/event/EventModel.dart';
+import 'package:greenify/model/event.dart';
 
 class EventDetailView extends StatelessWidget {
   final int idx;

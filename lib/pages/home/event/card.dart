@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/event/EventDetailView.dart';
-import 'package:greenify/pages/home/event/EventModel.dart';
+import 'package:greenify/pages/home/event/card/detail.dart';
+import 'package:greenify/model/event.dart';
 
 class EventDetailCard extends StatelessWidget {
   final int idx;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:greenify/pages/home/event/EventListView.dart';
-import 'package:greenify/pages/home/leaderboard/leaderboardView.dart';
+import 'package:greenify/pages/home/event.dart';
+import 'package:greenify/pages/home/leaderboard.dart';
 import 'package:greenify/pages/home/main.dart';
-import 'package:greenify/pages/home/profile/edit.dart';
-import 'package:greenify/pages/home/qrcode/QRScanner.dart';
+import 'package:greenify/pages/home/profile.dart';
+import 'package:greenify/pages/home/scanner.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
