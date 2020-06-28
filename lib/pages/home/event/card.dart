@@ -21,10 +21,11 @@ class EventDetailCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
-                  color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.greenAccent,
                   height: 150,
                   width: 100,
-                  child: Icon(Icons.event, size: 50, color: Colors.white),
+                  child: new Image.asset('assets/graphics/greenify_logo.png'),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),

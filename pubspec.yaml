@@ -55,6 +55,7 @@ flutter:
     - assets/graphics/events.png
     - assets/graphics/leaderboard.png
     - assets/graphics/settings.png
+    - assets/graphics/wwf.png
     - assets/graphics/user/anonymous.jpg
 
   # The following line ensures that the Material Icons font is
