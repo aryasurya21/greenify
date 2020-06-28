@@ -13,6 +13,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.black,
       child: Stack(
         children: <Widget>[Expanded(child: _renderBody())],
       ),
@@ -70,7 +71,7 @@ class _HomeState extends State<Home> {
                   Text("122000 GP",
                       textScaleFactor: 1.3,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black)),
+                          fontWeight: FontWeight.bold, color: Colors.white)),
                 ],
               )),
           Row(
@@ -83,21 +84,15 @@ class _HomeState extends State<Home> {
 
   Widget _profileInformation() {
     return Container(
+      // color: Colors.black26,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // ch
-            ),
-          ]),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)),
+        color: Color.fromRGBO(63, 63, 63, 1),
+      ),
       width: MediaQuery.of(context).size.width - 20,
       child: Column(
         children: <Widget>[
@@ -132,11 +127,11 @@ class _HomeState extends State<Home> {
       child: Column(
         children: <Widget>[
           IconTheme(
-              data: IconThemeData(color: Colors.black, size: 25),
+              data: IconThemeData(color: Colors.white, size: 25),
               child: Icon(Icons.redeem)),
           Text(
             "Redeem",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
             textScaleFactor: 1,
           )
         ],
@@ -149,11 +144,11 @@ class _HomeState extends State<Home> {
       child: Column(
         children: <Widget>[
           IconTheme(
-              data: IconThemeData(color: Colors.black, size: 25),
+              data: IconThemeData(color: Colors.white, size: 25),
               child: Icon(Icons.history)),
           Text(
             "History",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
             textScaleFactor: 1,
           )
         ],
@@ -188,19 +183,19 @@ class _HomeState extends State<Home> {
                   "Anton Chigurh",
                   textScaleFactor: 1.3,
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 new Text(
                   "@anton_chigurh",
                   textScaleFactor: 1,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                 ),
               ],
             ),
           ],
         ),
         IconTheme(
-            data: IconThemeData(color: Colors.black, size: 30),
+            data: IconThemeData(color: Colors.white, size: 30),
             child: Icon(Icons.settings_overscan)),
       ],
     ));

@@ -12,20 +12,13 @@ class _MissionsState extends State<Missions> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // ch
-            ),
-          ]),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)),
+        color: Color.fromRGBO(63, 63, 63, 1),
+      ),
       width: MediaQuery.of(context).size.width - 20,
       child: Column(
         children: <Widget>[_missionTitle()],
@@ -42,119 +35,46 @@ class _MissionsState extends State<Missions> {
           children: <Widget>[
             Text(
               "Missions",
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textScaleFactor: 1.3,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              textScaleFactor: 1.7,
             ),
-            Text("Are you ready to make the world greener?"),
-            _missionItemWithClaim(),
-            _missionItem2(),
-            _missionItem3(),
+            Text("Are you ready to make the world greener?",
+                style: TextStyle(color: Colors.white)),
+            ..._missionItems()
           ],
         ));
   }
 
-  Widget _missionList() {
-    return Container(
-        height: 190,
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            _missionItem(),
-            _missionItem2(),
-            _missionItem3(),
-          ],
-        ));
+  List<Widget> _missionItems() {
+    List<Widget> items = List<Widget>();
+    var itemData = [
+      {
+        "title": "Anti Plastic Plastic Club",
+        "prize": "10000 GP",
+        "description": "Purchase any product from Alfamart without plastic bags"
+      },
+      {
+        "title": "Pacifist",
+        "prize": "10000 GP",
+        "description": "Participate in eco-friendly event 3 times"
+      },
+      {
+        "title": "No Country for Plastic Straws",
+        "prize": "50000 GP",
+        "description": "Buy coffee/tea in Starbucks using your own tumbler"
+      },
+    ];
+
+    for (var i = 0; i < itemData.length; i++) {
+      items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
+          itemData[i]["description"]));
+    }
+
+    return items;
   }
 
-  Widget _missionItemWithClaim() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: _missionItem(),
-        ),
-      ],
-    );
-  }
-
-  Widget _missionItem3() {
-    return Container(
-      child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
-          child: Column(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Pacifist",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textScaleFactor: 1.15,
-                  ),
-                  Text(
-                    "2000 GP",
-                    textScaleFactor: 0.9,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Participate in Eco-friendly event around you 3 times",
-                    textScaleFactor: 0.9,
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: _progress(2, 3)))
-                ],
-              )
-            ],
-          )),
-    );
-  }
-
-  Widget _missionItem2() {
-    return Container(
-      child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
-          child: Column(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "One Person, One Cup",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textScaleFactor: 1.15,
-                  ),
-                  Text(
-                    "7000 GP",
-                    textScaleFactor: 0.9,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Take away at Starbucks using your own tumbler",
-                    textScaleFactor: 0.9,
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: _progress(2, 5)))
-                ],
-              )
-            ],
-          )),
-    );
-  }
-
-  Widget _missionItem() {
+  Widget _missionItem(String title, String prize, String description) {
     return Container(
       child: Padding(
           padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
@@ -166,18 +86,22 @@ class _MissionsState extends State<Missions> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Anti Plastic Plastic Club",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textScaleFactor: 1.15,
+                    title,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                    textScaleFactor: 1.3,
                   ),
                   Text(
-                    "5000 GP",
+                    prize,
                     textScaleFactor: 0.9,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   Text(
-                    "Purchase any product from Alfamart without plastic bags (min. Rp.20000)",
+                    description,
                     textScaleFactor: 0.9,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   Padding(
@@ -207,7 +131,7 @@ class _MissionsState extends State<Missions> {
     for (var i = 0; i < remaining; i++) {
       progressHearts.add(
         IconTheme(
-            data: IconThemeData(color: Colors.black),
+            data: IconThemeData(color: Colors.white),
             child: Icon(Icons.favorite)),
       );
     }

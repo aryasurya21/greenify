@@ -12,20 +12,13 @@ class _NearbyState extends State<Nearby> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // ch
-            ),
-          ]),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)),
+        color: Color.fromRGBO(63, 63, 63, 1),
+      ),
       width: MediaQuery.of(context).size.width - 20,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,10 +60,11 @@ class _NearbyState extends State<Nearby> {
                 children: <Widget>[
                   Container(
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
+                      color: Color.fromRGBO(63, 63, 63, 0.5),
                       child: Center(
                         child: Text(
                           "Indomaret",
+                          style: TextStyle(color: Colors.white),
                         ),
                       ))
                 ],
@@ -89,10 +83,11 @@ class _NearbyState extends State<Nearby> {
           children: <Widget>[
             Text(
               "Nearby",
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textScaleFactor: 1.3,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              textScaleFactor: 1.7,
             ),
-            Text("Merchant near you")
+            Text("Merchant near you", style: TextStyle(color: Colors.white)),
           ],
         ));
   }
