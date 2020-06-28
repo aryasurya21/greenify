@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/main/missions.dart';
 import 'package:greenify/pages/home/main/nearby.dart';
+import 'package:greenify/pages/home/main/redeem_list.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -130,6 +131,10 @@ class _MainState extends State<MainPage> {
 
   Widget _redeemButton() {
     return FlatButton(
+      onPressed: () => {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RedeemList()))
+      },
       child: Column(
         children: <Widget>[
           IconTheme(
@@ -139,7 +144,7 @@ class _MainState extends State<MainPage> {
             "Redeem",
             style: TextStyle(color: Colors.white),
             textScaleFactor: 1,
-          )
+          ),
         ],
       ),
     );

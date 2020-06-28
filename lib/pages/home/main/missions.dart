@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenify/pages/home/main/redeem_list.dart';
 
 class Missions extends StatefulWidget {
   Missions({Key key}) : super(key: key);
@@ -32,6 +33,17 @@ class _MissionsState extends State<Missions> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[_missionHeader(), ..._missionItems()],
+        ));
+  }
+
+  Widget _missionHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               "Missions",
@@ -41,9 +53,21 @@ class _MissionsState extends State<Missions> {
             ),
             Text("Are you ready to make the world greener?",
                 style: TextStyle(color: Colors.white)),
-            ..._missionItems()
           ],
-        ));
+        ),
+        FlatButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => RedeemList()));
+          },
+          child: Text(
+            "MORE",
+            style: TextStyle(color: Colors.white),
+            textScaleFactor: 1.4,
+          ),
+        )
+      ],
+    );
   }
 
   List<Widget> _missionItems() {
