@@ -7,93 +7,10 @@ class LeaderboardDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget crown;
     int pos = this.idx + 1;
 
-    if (pos == 1) {
-      crown = Padding(
-          padding: const EdgeInsets.only(right: 0.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Center(
-                  child: Icon(
-                FontAwesomeIcons.crown,
-                size: 36,
-                color: Colors.yellow,
-              )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 6),
-                child: Center(
-                    child: Text(
-                  '1',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                )),
-              )
-            ],
-          ));
-    } else if (pos == 2) {
-      crown = Padding(
-          padding: const EdgeInsets.only(right: 0.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Center(
-                  child: Icon(
-                FontAwesomeIcons.crown,
-                size: 36,
-                color: Colors.grey[300],
-              )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 6),
-                child: Center(
-                    child: Text(
-                  '2',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                )),
-              )
-            ],
-          ));
-    } else if (pos == 3) {
-      crown = Padding(
-          padding: const EdgeInsets.only(right: 0.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Center(
-                  child: Icon(
-                FontAwesomeIcons.crown,
-                size: 36,
-                color: Colors.orange[300],
-              )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 6),
-                child: Center(
-                    child: Text(
-                  '3',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                )),
-              )
-            ],
-          ));
-    } else {
-      crown = Container(
-        margin: const EdgeInsets.only(left: 2),
-        child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 17,
-            child: Text(
-              pos.toString(),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
-            )),
-      );
-    }
-
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 5, bottom: 5),
       child: Container(
         height: 100,
         decoration: BoxDecoration(
@@ -113,7 +30,7 @@ class LeaderboardDetailCard extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 15.0, right: 25),
-                          child: crown,
+                          child: crown(pos),
                         ),
                       ),
                       Align(
@@ -181,4 +98,92 @@ class LeaderboardDetailCard extends StatelessWidget {
       ),
     );
   }
+  
+  Widget crown(int pos){
+  if (pos == 1) {
+      return Padding(
+          padding: const EdgeInsets.only(right: 0.0),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Center(
+                  child: Icon(
+                FontAwesomeIcons.crown,
+                size: 36,
+                color: Colors.yellow,
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top: 6),
+                child: Center(
+                    child: Text(
+                  '1',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                )),
+              )
+            ],
+          ));
+    } 
+    else if (pos == 2) {
+      return Padding(
+          padding: const EdgeInsets.only(right: 0.0),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Center(
+                  child: Icon(
+                FontAwesomeIcons.crown,
+                size: 36,
+                color: Colors.grey[300],
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top: 6),
+                child: Center(
+                    child: Text(
+                  '2',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                )),
+              )
+            ],
+          ));
+    } 
+    else if (pos == 3) {
+      return Padding(
+          padding: const EdgeInsets.only(right: 0.0),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Center(
+                  child: Icon(
+                FontAwesomeIcons.crown,
+                size: 36,
+                color: Colors.orange[300],
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top: 6),
+                child: Center(
+                    child: Text(
+                  '3',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                )),
+              )
+            ],
+          ));
+    } 
+    else {
+      return Container(
+        margin: const EdgeInsets.only(left: 2),
+        child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 17,
+            child: Text(
+              pos.toString(),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+            )),
+      );
+    }
+  }
+    
 }
