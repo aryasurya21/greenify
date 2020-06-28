@@ -19,7 +19,7 @@ class Leaderboard extends StatelessWidget {
           ),
           Expanded(
             child: new StreamBuilder(
-              stream: Firestore.instance.collection('users').snapshots(),
+              stream: Firestore.instance.collection('users').orderBy('points', descending: true).snapshots(),
               builder: (context, snapshot){
                 if(!snapshot.hasData) return new Center(child: new CircularProgressIndicator());
                 return ListView.builder(
