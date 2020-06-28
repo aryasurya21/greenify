@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/main/mission_list.dart';
+import 'package:greenify/pages/home/main/mission/list.dart';
 
 class Missions extends StatefulWidget {
   Missions({Key key}) : super(key: key);

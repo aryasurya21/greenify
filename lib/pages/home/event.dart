@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/event/EventModel.dart';
-import 'EventDetailCard.dart';
+import 'package:greenify/model/event.dart';
+import 'event/card.dart';
 
 class EventList extends StatelessWidget {
   @override

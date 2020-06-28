@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/leaderboard/leaderboardDetailCard.dart';
+import 'package:greenify/pages/home/leaderboard/detail.dart';
 
 class Leaderboard extends StatelessWidget {
   @override
