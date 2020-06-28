@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/leaderboard/detail.dart';
 
@@ -24,10 +25,15 @@ class Leaderboard extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: 8,
-              itemBuilder: (ctx, i) => LeaderboardDetailCard(i),
+            child: new StreamBuilder(
+              stream: Firestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot){
+                if(!snapshot.hasData) return new Center(child: new CircularProgressIndicator());
+                return ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) => LeaderboardDetailCard(snapshot.data.documents[index], index),
+                );
+              }
             ),
           ),
         ],
