@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:greenify/pages/auth/register.dart';
-import 'package:greenify/pages/home/home.dart';
+import 'package:greenify/pages/home/main_page.dart';
 import 'package:greenify/util/session_util.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,16 +39,11 @@ class _LoginPageState extends State<LoginPage> {
                   margin: const EdgeInsets.only(
                     bottom: 25.0,
                   ),
-                  child: new Image.asset(
-                    'assets/graphics/greenify_logo.png'
-                  ),
+                  child: new Image.asset('assets/graphics/greenify_logo.png'),
                 ),
                 Text(
                   'Login',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 28),
                 ),
                 new Container(
                   margin: const EdgeInsets.all(
@@ -58,8 +53,8 @@ class _LoginPageState extends State<LoginPage> {
                     width: 275.0,
                     child: TextFormField(
                       cursorColor: Colors.white,
-                      validator: (input){
-                        if(input.isEmpty){
+                      validator: (input) {
+                        if (input.isEmpty) {
                           return 'Please type an email';
                         }
                       },
@@ -84,11 +79,10 @@ class _LoginPageState extends State<LoginPage> {
                     width: 275.0,
                     child: TextFormField(
                       cursorColor: Colors.white,
-                      validator: (input){
-                        if(input.isEmpty){
+                      validator: (input) {
+                        if (input.isEmpty) {
                           return 'Please provide a password';
-                        }
-                        else if(input.length < 6){
+                        } else if (input.length < 6) {
                           return 'Your password needs to be atleast 6 characters';
                         }
                       },
@@ -100,10 +94,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         enabledBorder: new UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white, 
-                            width: 1.0, 
-                            style: BorderStyle.none 
-                          ),
+                              color: Colors.white,
+                              width: 1.0,
+                              style: BorderStyle.none),
                         ),
                       ),
                       obscureText: true,
@@ -133,18 +126,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 new InkWell(
-                    child: Text(
-                      'Don\'t have an account? Register here',
-                      style: new TextStyle(
-                        fontSize: 16.0, 
-                        color: Colors.white,
-                      ),
+                  child: Text(
+                    'Don\'t have an account? Register here',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white,
                     ),
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => RegisterPage())
-                      );
-                    },
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => RegisterPage()));
+                  },
                 ),
               ],
             ),
@@ -154,22 +146,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> signIn() async{
+  Future<void> signIn() async {
     final formState = _formKey.currentState;
 
-    if(formState.validate()){
+    if (formState.validate()) {
       formState.save();
-      try{
-        AuthResult authResult  = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _email,
-          password: _password
-        );
+      try {
+        AuthResult authResult = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password);
         FirebaseUser user = authResult.user;
-        if(user.isEmailVerified){
+        if (user.isEmailVerified) {
           saveUserLogin(user);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
-        }
-        else{
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MainPage(
+                        title: "Home",
+                      )));
+        } else {
           return showDialog<void>(
             context: context,
             barrierDismissible: false, // user must tap button!
@@ -184,7 +178,8 @@ class _LoginPageState extends State<LoginPage> {
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
-                      Text('Email is not verified.\nPlease verify your email before login!'),
+                      Text(
+                          'Email is not verified.\nPlease verify your email before login!'),
                     ],
                   ),
                 ),
@@ -205,10 +200,9 @@ class _LoginPageState extends State<LoginPage> {
             },
           );
         }
-      }
-      catch(signInError){
-        if(signInError is PlatformException) {
-          if(signInError.code == 'ERROR_WRONG_PASSWORD') {
+      } catch (signInError) {
+        if (signInError is PlatformException) {
+          if (signInError.code == 'ERROR_WRONG_PASSWORD') {
             return showDialog<void>(
               context: context,
               barrierDismissible: false, // user must tap button!
