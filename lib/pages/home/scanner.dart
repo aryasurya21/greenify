@@ -113,7 +113,7 @@ class _QRScannerState extends State<QRScanner> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () => _goHome,
                               width: 120,
                             )
                           ],
