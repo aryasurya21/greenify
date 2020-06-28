@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:greenify/pages/home/home.dart';
+import 'package:greenify/pages/home/main.dart';
 
-class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -17,16 +16,16 @@ class MainPage extends StatefulWidget {
   final String title;
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _HomePageState extends State<HomePage> {
   int _counter = 0;
 
   int _currentIndex = 0;
 
   final tabs = [
-    Home(),
+    MainPage(),
     Center(child: Text("2")),
     Center(child: Text("3")),
     Center(child: Text("4"))

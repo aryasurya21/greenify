@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:greenify/pages/home/missions.dart';
-import 'package:greenify/pages/home/nearby.dart';
+import 'package:greenify/pages/home/main/missions.dart';
+import 'package:greenify/pages/home/main/nearby.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  MainPage({Key key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _MainState createState() => _MainState();
 }
 
-class _HomeState extends State<Home> {
+class _MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
