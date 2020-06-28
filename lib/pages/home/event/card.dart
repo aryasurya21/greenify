@@ -6,7 +6,6 @@ class EventDetailCard extends StatelessWidget {
   final int idx;
   EventDetailCard(this.idx);
 
-  Widget CardPicture = 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
