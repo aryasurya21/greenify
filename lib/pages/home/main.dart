@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:greenify/pages/home/main/missions.dart';
+import 'package:greenify/pages/home/main/nearby.dart';
+import 'package:greenify/pages/home/main/mission_list.dart';
 import 'package:greenify/pages/home/main/redeem_list.dart';
-import 'package:greenify/pages/home/missions.dart';
-import 'package:greenify/pages/home/nearby.dart';
-import 'package:greenify/pages/home/mission_list.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -26,12 +26,12 @@ class _MainState extends State<MainPage> {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Container(
-        height: MediaQuery.of(context).size.height + 180,
+        height: MediaQuery.of(context).size.height + 185,
         child: Stack(
           children: <Widget>[
             Positioned(
               child: Container(
-                height: MediaQuery.of(context).size.height + 180,
+                height: MediaQuery.of(context).size.height + 185,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: <Widget>[
@@ -135,7 +135,7 @@ class _MainState extends State<MainPage> {
     return FlatButton(
       onPressed: () => {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MissionList()))
+            context, MaterialPageRoute(builder: (context) => RedeemList()))
       },
       child: Column(
         children: <Widget>[
