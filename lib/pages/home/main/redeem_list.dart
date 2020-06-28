@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RedeemList extends StatefulWidget {
   RedeemList({Key key}) : super(key: key);
@@ -29,19 +30,22 @@ class _RedeemListState extends State<RedeemList> {
     List<Widget> items = List<Widget>();
     var itemData = [
       {
-        "title": "Anti Plastic Plastic Club",
+        "title": "COVID-19 WHO Fund",
         "prize": "10000 GP",
-        "description": "Purchase any product from Alfamart without plastic bags"
+        "description":
+            "Give to support the World Health Organization's efforts to prevent, detect, and respond to the coronavirus pandemic, in countries that need it most."
       },
       {
-        "title": "Pacifist",
+        "title": "A Hope For A Child Fund",
         "prize": "10000 GP",
-        "description": "Participate in eco-friendly event 3 times"
+        "description":
+            "HELP children living in poverty to have the capacity to improve their lives and the opportunity to bring lasting change to their communities. PROMOTE societies that value, protect and advance the well-being and rights of children. ENRICH supporters’ lives through their support of our cause."
       },
       {
-        "title": "No Country for Plastic Straws",
-        "prize": "50000 GP",
-        "description": "Buy coffee/tea in Starbucks using your own tumbler"
+        "title": "Starbucks Metal Straw",
+        "prize": "5000 GP",
+        "description":
+            "Made of food grade material, a 304 stainless steel straw is a safe and affordable option to drink out of. "
       },
     ];
 
@@ -79,33 +83,69 @@ class _RedeemListState extends State<RedeemList> {
                   Text(
                     title,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                        fontWeight: FontWeight.bold, color: Colors.green),
                     textScaleFactor: 1.7,
                   ),
+                  SizedBox(height: 3),
                   Text(
                     prize,
-                    textScaleFactor: 0.9,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  Text(
-                    description,
-                    textScaleFactor: 0.9,
+                    textScaleFactor: 1,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 10),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: _progress(2, 5)))
+                  Text(
+                    description,
+                    textScaleFactor: 1.2,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: double.maxFinite, // set width to maxFinite
+                    child: OutlineButton(
+                      onPressed: () {
+                        _onRedeem();
+                      },
+                      borderSide: BorderSide(color: Colors.white),
+                      child: Text(
+                        "CLAIM",
+                        style: TextStyle(color: Colors.white),
+                        textScaleFactor: 1.3,
+                      ),
+                    ),
+                  )
+                  // Padding(
+                  //     padding: EdgeInsets.only(left: 20, right: 20),
+                  //     child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: _progress(2, 5)))
                 ],
               )),
             ],
           )),
     );
+  }
+
+  void _onRedeem() {
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Claimed!",
+      desc:
+          "Check your email for further instructions! Thank you for making our world better.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
   }
 
   List<Widget> _progress(int completed, int limit) {

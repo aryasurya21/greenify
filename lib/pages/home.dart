@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:greenify/pages/home/event/EventListView.dart';
+import 'package:greenify/pages/home/leaderboard/leaderboardView.dart';
 import 'package:greenify/pages/home/main.dart';
+import 'package:greenify/pages/home/profile/edit.dart';
+import 'package:greenify/pages/home/qrcode/QRScanner.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -24,14 +29,16 @@ class _HomePageState extends State<HomePage> {
 
   final tabs = [
     MainPage(),
-    Center(child: Text("2")),
-    Center(child: Text("3")),
-    Center(child: Text("4"))
+    EventList(),
+    QRScanner(),
+    Leaderboard(),
+    EditProfilePage()
   ];
 
   final colors = [
     Colors.pink,
     Colors.lightBlue[600],
+    Colors.teal,
     Colors.yellow[900],
     Colors.green[600]
   ];
@@ -75,11 +82,15 @@ class _HomePageState extends State<HomePage> {
               title: SizedBox.shrink(),
           ),
           BottomNavigationBarItem(
-              icon: _buildIcon(Icons.list, 'Leaderboard', 2),
+              icon: _buildIcon(FontAwesomeIcons.qrcode, 'Scan', 2),
               title: SizedBox.shrink(),
           ),
           BottomNavigationBarItem(
-              icon: _buildIcon(Icons.settings, 'Settings', 3),
+              icon: _buildIcon(Icons.list, 'Leaderboard', 3),
+              title: SizedBox.shrink(),
+          ),
+          BottomNavigationBarItem(
+              icon: _buildIcon(Icons.settings, 'Settings', 4),
               title: SizedBox.shrink(),
           ),
         ],

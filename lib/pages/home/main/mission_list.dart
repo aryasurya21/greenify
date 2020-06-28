@@ -12,7 +12,7 @@ class _MissionListState extends State<MissionList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Redeem"),
+          title: Text("Missions"),
         ),
         body: Container(color: Colors.black, child: _listView()));
   }
@@ -29,7 +29,7 @@ class _MissionListState extends State<MissionList> {
     List<Widget> items = List<Widget>();
     var itemData = [
       {
-        "title": "Anti Plastic Plastic Club",
+        "title": "Anti Plastic Plastic Clubss",
         "prize": "10000 GP",
         "description": "Purchase any product from Alfamart without plastic bags"
       },
