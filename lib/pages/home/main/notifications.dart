@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -20,41 +21,21 @@ class _NotificationsState extends State<Notifications> {
 
   Container _listView() {
     return Container(
-        child: ListView(
-      padding: EdgeInsets.all(10),
-      children: _missionItems(),
-    ));
+        child: new StreamBuilder(
+        stream: Firestore.instance.collection('notifications').snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return new Container();
+          return ListView.builder(
+            padding: EdgeInsets.all(10),
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) => _missionItem(snapshot.data.documents[index]),
+          );
+        }
+      )
+    );
   }
 
-  List<Widget> _missionItems() {
-    List<Widget> items = List<Widget>();
-    var itemData = [
-      {
-        "title": "Lawson",
-        "prize": "10000 GP",
-        "description":
-            "YAY! You've got 500 GP for not using plastic bags for your transaction! The earth thanks you!"
-      },
-      {
-        "title": "Recycle for Better Earth",
-        "prize": "10000 GP",
-        "description":
-            "You've got 1500GP for attending Recycle for Better Earth event! Great job!"
-      },
-    ];
-
-    for (var i = 0; i < itemData.length; i++) {
-      items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
-          itemData[i]["description"]));
-      items.add(SizedBox(
-        height: 20,
-      ));
-    }
-
-    return items;
-  }
-
-  Widget _missionItem(String title, String prize, String description) {
+  Widget _missionItem(DocumentSnapshot document) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -64,7 +45,6 @@ class _NotificationsState extends State<Notifications> {
               bottomRight: Radius.circular(10)),
           color: Color.fromRGBO(63, 63, 63, 1)),
       width: MediaQuery.of(context).size.width - 10,
-      // color: Color.fromRGBO(63, 63, 63, 1),
       child: Padding(
           padding: EdgeInsets.only(top: 10, right: 15, left: 15, bottom: 10),
           child: Row(
@@ -75,7 +55,7 @@ class _NotificationsState extends State<Notifications> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title,
+                    document['title'].toString(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.green),
                     textScaleFactor: 1.7,
@@ -83,64 +63,16 @@ class _NotificationsState extends State<Notifications> {
                   SizedBox(height: 3),
                   SizedBox(height: 10),
                   Text(
-                    description,
+                    document['description'].toString(),
                     textScaleFactor: 1.2,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                  SizedBox(height: 10),
-                  // Padding(
-                  //     padding: EdgeInsets.only(left: 20, right: 20),
-                  //     child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: _progress(2, 5)))
+                  SizedBox(height: 10)
                 ],
               )),
             ],
           )),
     );
-  }
-
-  void _onRedeem() {
-    Alert(
-      context: context,
-      type: AlertType.success,
-      title: "Claimed!",
-      desc:
-          "Check your email for further instructions! Thank you for making our world better.",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: 120,
-        )
-      ],
-    ).show();
-  }
-
-  List<Widget> _progress(int completed, int limit) {
-    List<Widget> progressHearts = List<Widget>();
-    for (var i = 0; i < completed; i++) {
-      progressHearts.add(
-        IconTheme(
-            data: IconThemeData(color: Colors.red),
-            child: Icon(Icons.favorite)),
-      );
-    }
-
-    var remaining = limit - completed;
-    for (var i = 0; i < remaining; i++) {
-      progressHearts.add(
-        IconTheme(
-            data: IconThemeData(color: Colors.white),
-            child: Icon(Icons.favorite)),
-      );
-    }
-
-    return progressHearts;
   }
 }
