@@ -164,7 +164,8 @@ class _RegisterPageState extends State<RegisterPage> {
         Firestore.instance.collection("users").document()
           .setData({
             "auth_uid": user.uid,
-            "email": _email
+            "email": _email,
+            "points": 0
           });
 
         // Go to login page
