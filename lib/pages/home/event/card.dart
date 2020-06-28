@@ -21,16 +21,10 @@ class EventDetailCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
+                  color: Colors.green,
                   height: 150,
                   width: 100,
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(63, 63, 63, 1),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(5),
-                          bottomRight: Radius.circular(5)),
-                      image: DecorationImage(
-                          image: NetworkImage(eventList[idx].eventPhotoURL),
-                          fit: BoxFit.fill)),
+                  child: Icon(Icons.event, size: 50, color: Colors.white),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
