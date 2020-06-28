@@ -35,9 +35,7 @@ class _QRScannerState extends State<QRScanner> {
   }
 
   void _goHome() {
-    Navigator.pop(context);
-    Navigator.pushAndRemoveUntil(
-        context, _homeRoute, (Route<dynamic> r) => false);
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -91,6 +89,8 @@ class _QRScannerState extends State<QRScanner> {
                             ],
                           ).show();
                         }
+                      } on FormatException {
+                        _goHome();
                       } on PlatformException catch (error) {
                         if (error.code == BarcodeScanner.CameraAccessDenied) {
                           setState(() {
