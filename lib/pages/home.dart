@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:greenify/pages/home/event/EventListView.dart';
+import 'package:greenify/pages/home/leaderboard/leaderboardView.dart';
 import 'package:greenify/pages/home/main.dart';
+import 'package:greenify/pages/home/profile/edit.dart';
+import 'package:greenify/pages/home/qrcode/QRScanner.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -26,9 +31,10 @@ class _HomePageState extends State<HomePage> {
 
   final tabs = [
     MainPage(),
-    Center(child: Text("2")),
-    Center(child: Text("3")),
-    Center(child: Text("4"))
+    EventList(),
+    QRScanner(),
+    Leaderboard(),
+    EditProfilePage()
   ];
 
   void _incrementCounter() {
@@ -65,6 +71,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
               title: Text("Events"),
+              backgroundColor: Colors.green),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.qrcode),
+              title: Text("Scan"),
               backgroundColor: Colors.green),
           BottomNavigationBarItem(
               icon: Icon(Icons.list),

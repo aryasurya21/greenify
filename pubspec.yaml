@@ -31,7 +31,9 @@ dependencies:
   shared_preferences:
   image_cropper: 1.0.2
   image_picker: 0.6.0+17
+  barcode_scan: ^2.0.1
   rflutter_alert: ^1.0.3
+  font_awesome_flutter: any
 
 
   # The following adds the Cupertino Icons font to your application.
