@@ -14,8 +14,17 @@ class SplashPage extends StatefulWidget {
 class _SplashState extends State<SplashPage> {
   bool _visible = true;
 
+  Timer _animationTimer;
+
+  @override
+  void dispose() {
+    _animationTimer?.cancel();
+    _animationTimer = null;
+    super.dispose();
+  }
+
   _SplashState() {
-    Timer.periodic(
+    _animationTimer = Timer.periodic(
       Duration(milliseconds: 700), 
       (Timer t) => setState((){
         _visible = !_visible;
