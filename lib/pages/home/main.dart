@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:greenify/pages/home/main/donate.dart';
 import 'package:greenify/pages/home/main/missions.dart';
 import 'package:greenify/pages/home/main/nearby.dart';
 import 'package:greenify/pages/home/main/notifications.dart';
@@ -106,7 +107,7 @@ class _MainState extends State<MainPage> {
                   ],
                 )),
             Row(
-              children: <Widget>[_redeemButton(), _historyButton()],
+              children: <Widget>[_redeemButton(), _donateButton(), _historyButton()],
             )
           ],
         ),
@@ -142,20 +143,6 @@ class _MainState extends State<MainPage> {
     );
   }
 
-  Widget _middleMenuBar() {
-    return Container(
-      width: MediaQuery.of(context).size.width - 100,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.green),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[_redeemButton(), _historyButton()],
-      ),
-    );
-  }
-
   Widget _redeemButton() {
     return FlatButton(
       onPressed: () => {
@@ -169,6 +156,27 @@ class _MainState extends State<MainPage> {
               child: Icon(Icons.redeem)),
           Text(
             "Redeem",
+            style: TextStyle(color: Colors.white),
+            textScaleFactor: 1,
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _donateButton() {
+    return FlatButton(
+      onPressed: () => {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Donate()))
+      },
+      child: Column(
+        children: <Widget>[
+          IconTheme(
+              data: IconThemeData(color: Colors.white, size: 25),
+              child: Icon(Icons.attach_money)),
+          Text(
+            "Donate",
             style: TextStyle(color: Colors.white),
             textScaleFactor: 1,
           ),
