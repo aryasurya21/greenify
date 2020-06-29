@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:greenify/util/session_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RedeemList extends StatefulWidget {
@@ -11,16 +9,6 @@ class RedeemList extends StatefulWidget {
 }
 
 class _RedeemListState extends State<RedeemList> {
-  String _userID;
-
-  _RedeemListState() {
-    getUserLogin().then((val) => setState(() {
-          _userID = val;
-        }
-      )
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,26 +20,48 @@ class _RedeemListState extends State<RedeemList> {
 
   Container _listView() {
     return Container(
-      child: StreamBuilder(
-        stream: Firestore.instance.collection('redeemables')
-          .where('is_redeemed', isEqualTo: false)
-          .where('user_id', isEqualTo: _userID)
-          .snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return new Container();
-          return ListView.builder(
-            padding: EdgeInsets.all(10),
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) => _missionItem(snapshot.data.documents[index]),
-          );
-        }
-      )
-    );
+        child: ListView(
+      padding: EdgeInsets.all(10),
+      children: _missionItems(),
+    ));
   }
 
-  Widget _missionItem(DocumentSnapshot document) {
+  List<Widget> _missionItems() {
+    List<Widget> items = List<Widget>();
+    var itemData = [
+      {
+        "title": "COVID-19 WHO Fund",
+        "prize": "10000 GP",
+        "description":
+            "Give to support the World Health Organization's efforts to prevent, detect, and respond to the coronavirus pandemic, in countries that need it most."
+      },
+      {
+        "title": "A Hope For A Child Fund",
+        "prize": "10000 GP",
+        "description":
+            "HELP children living in poverty to have the capacity to improve their lives and the opportunity to bring lasting change to their communities. PROMOTE societies that value, protect and advance the well-being and rights of children. ENRICH supporters’ lives through their support of our cause."
+      },
+      {
+        "title": "Starbucks Metal Straw",
+        "prize": "5000 GP",
+        "description":
+            "Made of food grade material, a 304 stainless steel straw is a safe and affordable option to drink out of. "
+      },
+    ];
+
+    for (var i = 0; i < itemData.length; i++) {
+      items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
+          itemData[i]["description"]));
+      items.add(SizedBox(
+        height: 20,
+      ));
+    }
+
+    return items;
+  }
+
+  Widget _missionItem(String title, String prize, String description) {
     return Container(
-      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -71,21 +81,21 @@ class _RedeemListState extends State<RedeemList> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    document['title'].toString(),
+                    title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.green),
                     textScaleFactor: 1.7,
                   ),
                   SizedBox(height: 3),
                   Text(
-                    document['points'].toString() + " GP",
+                    prize,
                     textScaleFactor: 1,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    document['description'].toString(),
+                    description,
                     textScaleFactor: 1.2,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
@@ -95,7 +105,7 @@ class _RedeemListState extends State<RedeemList> {
                     width: double.maxFinite, // set width to maxFinite
                     child: OutlineButton(
                       onPressed: () {
-                        _onRedeem(document);
+                        _onRedeem();
                       },
                       borderSide: BorderSide(color: Colors.white),
                       child: Text(
@@ -105,6 +115,12 @@ class _RedeemListState extends State<RedeemList> {
                       ),
                     ),
                   )
+                  // Padding(
+                  //     padding: EdgeInsets.only(left: 20, right: 20),
+                  //     child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: _progress(2, 5)))
                 ],
               )),
             ],
@@ -112,40 +128,45 @@ class _RedeemListState extends State<RedeemList> {
     );
   }
 
-  void _onRedeem(DocumentSnapshot document) {
-    int points;
-    getUserByAuthUID(_userID).then((val) => {
-      points = val['points'] + document['points'],
-      Firestore.instance.collection('redeemables').document(document.documentID)
-        .updateData({
-          'is_redeemed': true
-        }),
-      Firestore.instance.collection('users').document(val.documentID)
-        .updateData({
-          'points': points
-        }),
-      Alert(
-        context: context,
-        type: AlertType.success,
-        title: "Claimed!",
-        desc:
-            "Thank you for making our world better!",
-        buttons: [
-          DialogButton(
-            child: Text(
-              "OK",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-            width: 120,
-          )
-        ],
-      ).show(),
-      sendNotification(
-        document['title'], 
-        'You\'ve got ' + document['points'].toString() + ' points for scanning your plasticless grocery receipt! Great job!',
-        _userID
-      )
-    });
+  void _onRedeem() {
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Claimed!",
+      desc:
+          "Check your email for further instructions! Thank you for making our world better.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+  List<Widget> _progress(int completed, int limit) {
+    List<Widget> progressHearts = List<Widget>();
+    for (var i = 0; i < completed; i++) {
+      progressHearts.add(
+        IconTheme(
+            data: IconThemeData(color: Colors.red),
+            child: Icon(Icons.favorite)),
+      );
+    }
+
+    var remaining = limit - completed;
+    for (var i = 0; i < remaining; i++) {
+      progressHearts.add(
+        IconTheme(
+            data: IconThemeData(color: Colors.white),
+            child: Icon(Icons.favorite)),
+      );
+    }
+
+    return progressHearts;
   }
 }
