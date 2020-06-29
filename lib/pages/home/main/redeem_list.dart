@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:greenify/util/session_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RedeemList extends StatefulWidget {
@@ -9,6 +11,14 @@ class RedeemList extends StatefulWidget {
 }
 
 class _RedeemListState extends State<RedeemList> {
+  String _userID;
+
+  _RedeemListState() {
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,48 +30,26 @@ class _RedeemListState extends State<RedeemList> {
 
   Container _listView() {
     return Container(
-        child: ListView(
-      padding: EdgeInsets.all(10),
-      children: _missionItems(),
-    ));
+        child: StreamBuilder(
+            stream: Firestore.instance
+                .collection('redeemables')
+                .where('is_redeemed', isEqualTo: false)
+                .where('user_id', isEqualTo: _userID)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return new Container();
+              return ListView.builder(
+                padding: EdgeInsets.all(10),
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) =>
+                    _missionItem(snapshot.data.documents[index]),
+              );
+            }));
   }
 
-  List<Widget> _missionItems() {
-    List<Widget> items = List<Widget>();
-    var itemData = [
-      {
-        "title": "COVID-19 WHO Fund",
-        "prize": "10000 GP",
-        "description":
-            "Give to support the World Health Organization's efforts to prevent, detect, and respond to the coronavirus pandemic, in countries that need it most."
-      },
-      {
-        "title": "A Hope For A Child Fund",
-        "prize": "10000 GP",
-        "description":
-            "HELP children living in poverty to have the capacity to improve their lives and the opportunity to bring lasting change to their communities. PROMOTE societies that value, protect and advance the well-being and rights of children. ENRICH supporters’ lives through their support of our cause."
-      },
-      {
-        "title": "Starbucks Metal Straw",
-        "prize": "5000 GP",
-        "description":
-            "Made of food grade material, a 304 stainless steel straw is a safe and affordable option to drink out of. "
-      },
-    ];
-
-    for (var i = 0; i < itemData.length; i++) {
-      items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
-          itemData[i]["description"]));
-      items.add(SizedBox(
-        height: 20,
-      ));
-    }
-
-    return items;
-  }
-
-  Widget _missionItem(String title, String prize, String description) {
+  Widget _missionItem(DocumentSnapshot document) {
     return Container(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -81,21 +69,21 @@ class _RedeemListState extends State<RedeemList> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title,
+                    document['title'].toString(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.green),
                     textScaleFactor: 1.7,
                   ),
                   SizedBox(height: 3),
                   Text(
-                    prize,
+                    document['points'].toString() + " GP",
                     textScaleFactor: 1,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    description,
+                    document['description'].toString(),
                     textScaleFactor: 1.2,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
@@ -105,7 +93,7 @@ class _RedeemListState extends State<RedeemList> {
                     width: double.maxFinite, // set width to maxFinite
                     child: OutlineButton(
                       onPressed: () {
-                        _onRedeem();
+                        _onRedeem(document);
                       },
                       borderSide: BorderSide(color: Colors.white),
                       child: Text(
@@ -115,12 +103,6 @@ class _RedeemListState extends State<RedeemList> {
                       ),
                     ),
                   )
-                  // Padding(
-                  //     padding: EdgeInsets.only(left: 20, right: 20),
-                  //     child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: _progress(2, 5)))
                 ],
               )),
             ],
