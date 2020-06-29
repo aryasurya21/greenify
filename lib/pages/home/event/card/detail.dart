@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:greenify/util/session_util.dart';
 
 class EventDetailView extends StatelessWidget {
   final DocumentSnapshot document;
@@ -115,7 +116,29 @@ class EventDetailView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(
+                    10.0,
+                  ),
+                  child: new SizedBox(
+                    width: 255.0,
+                    child: RaisedButton(
+                      onPressed: () => {
+                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString())
+                      },
+                      padding: EdgeInsets.all(10.0),
+                      color: Colors.white,
+                      child: Text(
+                        'Attend',
+                        style: new TextStyle(
+                          fontSize: 24.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

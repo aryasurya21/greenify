@@ -37,3 +37,12 @@ Future<void> sendNotification(String title, String description) async{
       'description': description
     });
 }
+
+Future<void> sendRedeemable(String title, int points, String description) async{
+  Firestore.instance.collection('redeemables').document()
+    .setData({
+      'title': title,
+      'points': points,
+      'description': description
+    });
+}
