@@ -143,7 +143,7 @@ class _RedeemListState extends State<RedeemList> {
       ).show(),
       sendNotification(
         document['title'], 
-        'You\'ve got ' + document['points'].toString() + ' points for scanning your plasticless grocery receipt! Great job!',
+        'YAY! You\'ve redeemed ' + document['points'].toString() + ' points for ' + document['title'].toString() + '!',
         _userID
       )
     });
