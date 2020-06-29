@@ -161,9 +161,11 @@ class _RegisterPageState extends State<RegisterPage> {
         user.sendEmailVerification();
 
         // Save to users with custom document ID
-        Firestore.instance.collection("users").document(user.uid)
+        Firestore.instance.collection("users").document()
           .setData({
-            "email": _email
+            "auth_uid": user.uid,
+            "email": _email,
+            "points": 0
           });
 
         // Go to login page

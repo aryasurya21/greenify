@@ -19,12 +19,32 @@ Future<bool> removeUserLogin() async{
 }
 
 Future<DocumentSnapshot> getUserByAuthUID(String authUid) async{
-  var data = Firestore.instance.collection('users').document(authUid).get();
-  return data;
+  Query user = Firestore.instance.collection('users').where("auth_uid", isEqualTo: authUid);
+  QuerySnapshot data = await user.getDocuments();
+  return data.documents[0];
 }
 
 Future<DocumentSnapshot> getUserByUsername(String username) async{
   Query user = Firestore.instance.collection('users').where("username", isEqualTo: username);
   QuerySnapshot data = await user.getDocuments();
   return data.documents[0];
+}
+
+Future<void> sendNotification(String title, String description, String userID) async{
+  Firestore.instance.collection('notifications').document()
+    .setData({
+      'title': title,
+      'description': description,
+      'user_id': userID
+    });
+}
+
+Future<void> sendRedeemable(String title, int points, String description, String userID) async{
+  Firestore.instance.collection('redeemables').document()
+    .setData({
+      'title': title,
+      'points': points,
+      'description': description,
+      'user_id': userID
+    });
 }

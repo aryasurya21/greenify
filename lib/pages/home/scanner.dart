@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenify/pages/home.dart';
+import 'package:greenify/util/session_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class QRScanner extends StatefulWidget {
@@ -11,22 +15,38 @@ class QRScanner extends StatefulWidget {
 }
 
 class _QRScannerState extends State<QRScanner> {
-  String barcode = "";
+  String barcode = "", _userID;
+  bool _visible = true;
+
+  Timer _animationTimer;
+
+  @override
+  void dispose() {
+    _animationTimer?.cancel();
+    _animationTimer = null;
+    super.dispose();
+  }
+
+  _QRScannerState() {
+    _animationTimer = Timer.periodic(
+        Duration(milliseconds: 700),
+        (Timer t) => setState(() {
+              _visible = !_visible;
+            }));
+
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }));
+  }
 
   void _goHome() {
-    Navigator.pop(context);
-    Navigator.pushAndRemoveUntil(
-        context, _homeRoute, (Route<dynamic> r) => false);
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Scan'),
-          backgroundColor: Colors.black,
-        ),
         body: Container(
           color: Colors.black,
           child: Center(
@@ -38,9 +58,16 @@ class _QRScannerState extends State<QRScanner> {
                   height: MediaQuery.of(context).size.height - 200,
                   child: RaisedButton(
                     color: Colors.black,
-                    child: Text(
-                      'Tap Me to Scan',
-                      style: GoogleFonts.pressStart2p(color: Colors.white),
+                    child: AnimatedOpacity(
+                      opacity: _visible ? 1.0 : 0.0,
+                      duration: Duration(milliseconds: 500),
+                      child: Text(
+                        'Tap Me to Scan',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.pressStart2p(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       try {
@@ -49,24 +76,38 @@ class _QRScannerState extends State<QRScanner> {
                           setState(() {
                             this.barcode = barcode;
                           });
-                          Alert(
-                            context: context,
-                            type: AlertType.success,
-                            title: "Succesful",
-                            desc: "Succesful redeemed 35 GPs",
-                            buttons: [
-                              DialogButton(
-                                child: Text(
-                                  "OK",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => _goHome(),
-                                width: 120,
-                              )
-                            ],
-                          ).show();
+                          int points;
+                          getUserByAuthUID(_userID).then((val) => {
+                                points = val.data['points'] + 35,
+                                Firestore.instance
+                                    .collection('users')
+                                    .document(val.documentID)
+                                    .updateData({'points': points}),
+                                Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Succesful",
+                                  desc: "Succesful redeemed 35 GPs",
+                                  buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () => _goHome(),
+                                      width: 120,
+                                    )
+                                  ],
+                                ).show(),
+                                sendNotification(
+                                    'QR Scanner',
+                                    'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!',
+                                    _userID)
+                              });
                         }
+                      } on FormatException {
+                        _goHome();
                       } on PlatformException catch (error) {
                         if (error.code == BarcodeScanner.CameraAccessDenied) {
                           setState(() {
@@ -89,7 +130,7 @@ class _QRScannerState extends State<QRScanner> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () => _goHome,
                               width: 120,
                             )
                           ],
@@ -106,9 +147,3 @@ class _QRScannerState extends State<QRScanner> {
     );
   }
 }
-
-final PageRouteBuilder _homeRoute = new PageRouteBuilder(
-  pageBuilder: (BuildContext context, _, __) {
-    return HomePage();
-  },
-);

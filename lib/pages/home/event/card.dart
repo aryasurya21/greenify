@@ -1,17 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/event/card/detail.dart';
-import 'package:greenify/model/event.dart';
 
 class EventDetailCard extends StatelessWidget {
-  final int idx;
-  EventDetailCard(this.idx);
+  final DocumentSnapshot document;
+  EventDetailCard(this.document);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EventDetailView(this.idx)));
+            MaterialPageRoute(builder: (context) => EventDetailView(this.document)));
       },
       child: Column(
         children: <Widget>[
@@ -21,16 +21,11 @@ class EventDetailCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.greenAccent,
                   height: 150,
                   width: 100,
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(63, 63, 63, 1),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(5),
-                          bottomRight: Radius.circular(5)),
-                      image: DecorationImage(
-                          image: NetworkImage(eventList[idx].eventPhotoURL),
-                          fit: BoxFit.fill)),
+                  child: new Image.asset('assets/graphics/greenify_logo.png'),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
@@ -39,7 +34,7 @@ class EventDetailCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        truncateTitle(eventList[idx].eventName),
+                        truncateTitle(document['name'].toString()),
                         style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w100,
@@ -50,7 +45,7 @@ class EventDetailCard extends StatelessWidget {
                         width: 170,
                         margin: const EdgeInsets.only(right: 20),
                         child: Text(
-                          truncateDesc(eventList[idx].eventDesc),
+                          truncateDesc(document['description'].toString()),
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w100,

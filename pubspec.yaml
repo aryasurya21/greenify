@@ -52,6 +52,11 @@ flutter:
   assets:
     - assets/graphics/spinning_globe.gif
     - assets/graphics/greenify_logo.png
+    - assets/graphics/events.png
+    - assets/graphics/leaderboard.png
+    - assets/graphics/settings.png
+    - assets/graphics/wwf.png
+    - assets/graphics/user/anonymous.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

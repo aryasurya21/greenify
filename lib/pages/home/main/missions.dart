@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/main/mission/list.dart';
 
@@ -21,20 +22,35 @@ class _MissionsState extends State<Missions> {
         color: Color.fromRGBO(63, 63, 63, 1),
       ),
       width: MediaQuery.of(context).size.width - 20,
-      child: Column(
-        children: <Widget>[_missionTitle()],
-      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 15, top: 15),
+        child: Column(
+          children: <Widget>[
+            _missionHeader(),
+            _missionList()
+          ]
+        )
+      )
     );
   }
 
-  Widget _missionTitle() {
-    return Padding(
-        padding: EdgeInsets.only(left: 15, top: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[_missionHeader(), ..._missionItems()],
-        ));
+  Widget _missionList() {
+    return Container(
+      padding: EdgeInsets.only(left: 0, top: 0),
+      child: new StreamBuilder(
+        stream: Firestore.instance.collection('missions').snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return new Container();
+          return Column(
+            children: <Widget>[
+              _missionItem(snapshot.data.documents[0]),
+              _missionItem(snapshot.data.documents[1]),
+              _missionItem(snapshot.data.documents[2])
+            ]
+          );
+        }
+      )
+    );
   }
 
   Widget _missionHeader() {
@@ -70,35 +86,7 @@ class _MissionsState extends State<Missions> {
     );
   }
 
-  List<Widget> _missionItems() {
-    List<Widget> items = List<Widget>();
-    var itemData = [
-      {
-        "title": "Anti Plastic Plastic Club",
-        "prize": "10000 GP",
-        "description": "Purchase any product from Alfamart without plastic bags"
-      },
-      {
-        "title": "Pacifist",
-        "prize": "10000 GP",
-        "description": "Participate in eco-friendly event 3 times"
-      },
-      {
-        "title": "No Country for Plastic Straws",
-        "prize": "50000 GP",
-        "description": "Buy coffee/tea in Starbucks using your own tumbler"
-      },
-    ];
-
-    for (var i = 0; i < itemData.length; i++) {
-      items.add(_missionItem(itemData[i]["title"], itemData[i]["prize"],
-          itemData[i]["description"]));
-    }
-
-    return items;
-  }
-
-  Widget _missionItem(String title, String prize, String description) {
+  Widget _missionItem(DocumentSnapshot document) {
     return Container(
       child: Padding(
           padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
@@ -110,19 +98,19 @@ class _MissionsState extends State<Missions> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title,
+                    document['title'].toString(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                     textScaleFactor: 1.3,
                   ),
                   Text(
-                    prize,
+                    document['base_points'].toString(),
                     textScaleFactor: 0.9,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   Text(
-                    description,
+                    document['description'].toString(),
                     textScaleFactor: 0.9,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),

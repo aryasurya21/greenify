@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:greenify/pages/auth/login.dart';
 import 'package:greenify/pages/home/main.dart';
 import 'package:greenify/util/session_util.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -11,7 +17,8 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfilePage>{
   String _userID = "";
-  String _username, _fullname, _phone;
+  String _username, _fullname, _phone, _profilePictureUrl = "";
+  bool _uploadingImage = false;
 
   var _usernameController = TextEditingController();
   var _fullnameController = TextEditingController();
@@ -19,6 +26,7 @@ class _EditProfileState extends State<EditProfilePage>{
   
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // Set initial state
   _EditProfileState() {
     getUserLogin().then((authId) => 
       getUserByAuthUID(authId).then((val) => setState((){
@@ -34,6 +42,69 @@ class _EditProfileState extends State<EditProfilePage>{
 
   @override
   Widget build(BuildContext context){
+    // Image widget
+    Widget _imageLoad(){
+      if(_uploadingImage){
+        return new Stack(
+          children: <Widget>[
+            new Opacity(
+              opacity: 0.1,
+              child:  Image.asset(
+                'assets/graphics/user/anonymous.jpg',
+              ),
+            ),
+            new Padding(
+              padding: EdgeInsets.all(50.0),
+              child: new Center(
+                child: new CircularProgressIndicator(),
+              ),
+            ),
+          ]
+        );
+      }
+      else{
+        if(_profilePictureUrl == ""){
+          return new Image.asset(
+            'assets/graphics/user/anonymous.jpg',
+          );
+        }
+        else{
+          return new FadeInImage(
+            image: NetworkImage(_profilePictureUrl),
+            placeholder: AssetImage('assets/graphics/user/anonymous.jpg'),
+            fadeInDuration: Duration(milliseconds: 100),
+            fadeOutDuration: Duration(milliseconds: 100),
+          );
+        }
+      }
+    }
+
+    Widget _profilePicture(){
+      return new GestureDetector(
+          onTap: (){
+            setState(() {
+              _uploadingImage = true; 
+            });
+            _changeProfilePicture().then((_){
+              setState(() {
+                _uploadingImage = false; 
+              });
+            });
+          },
+          child: new Container(
+            width: 150.0,
+            padding: const EdgeInsets.only(
+              top: 30.0, 
+              bottom: 10.0, 
+            ),
+            child: new ClipRRect(
+              borderRadius: new BorderRadius.circular(100.0),
+              child: _imageLoad()
+            )
+          ),
+        );
+    }
+
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.black,
@@ -45,18 +116,26 @@ class _EditProfileState extends State<EditProfilePage>{
             children: <Widget>[
               new Column(
                 children: <Widget>[
-                  new Container(
-                    padding: EdgeInsets.only(
-                      top: 30.0,
-                      bottom: 10.0,
+                  new Padding(
+                    padding: EdgeInsets.only(top: 35, bottom: 5),
+                    child: Container(
+                      height: 65,
+                      child: new Image.asset(
+                          'assets/graphics/settings.png'),
                     ),
-                    child: new Text(
-                      'Profile',
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
+                  ),
+                  new Container(
+                    child: new StreamBuilder(
+                      stream: Firestore.instance.collection('users').where("auth_uid", isEqualTo: _userID).snapshots(),
+                      builder: (context, snapshot){
+                        if(snapshot.data != null){
+                          if(snapshot.data.documents.length > 0){
+                            if(snapshot.data.documents[0].data.containsKey('profile_pic_url')) 
+                              _profilePictureUrl = snapshot.data.documents[0]['profile_pic_url'];
+                          }
+                        }
+                        return _profilePicture();
+                      }
                     ),
                   ),
                   new Container(
@@ -153,7 +232,7 @@ class _EditProfileState extends State<EditProfilePage>{
                   ),
                   new Container(
                     margin: const EdgeInsets.all(
-                      10.0,
+                      5.0,
                     ),
                     child: new SizedBox(
                       width: 255.0,
@@ -171,6 +250,26 @@ class _EditProfileState extends State<EditProfilePage>{
                       ),
                     ),
                   ),
+                  new Container(
+                    margin: const EdgeInsets.all(
+                      5.0,
+                    ),
+                    child: new SizedBox(
+                      width: 255.0,
+                      child: RaisedButton(
+                        onPressed: signOut,
+                        padding: EdgeInsets.all(13.0),
+                        color: Colors.white,
+                        child: Text(
+                          'Logout',
+                          style: new TextStyle(
+                            fontSize: 16.0, 
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -178,6 +277,38 @@ class _EditProfileState extends State<EditProfilePage>{
         ),
       ),
     );
+  }
+
+  Future<void> _changeProfilePicture() async{
+    File selected = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final _storage = FirebaseStorage(storageBucket: 'gs://greenify-89311.appspot.com');
+    String downloadUrl = "";
+
+    if(selected != null){
+      selected = await ImageCropper.cropImage(
+        ratioX: 1,
+        ratioY: 1,
+        sourcePath: selected.path,
+        toolbarColor: Colors.white,
+        toolbarWidgetColor: Colors.pink,
+        statusBarColor: Colors.black,
+        toolbarTitle: 'Crop Image'
+      );
+    }
+
+    if(selected != null){
+      DocumentSnapshot userData = await getUserByAuthUID(_userID);
+
+      StorageUploadTask _uploadTask = _storage.ref().child('user_photos/${userData['username']}_${DateTime.now()}.jpg').putFile(selected);
+      StorageTaskSnapshot _storageTaskSnapshot = await _uploadTask.onComplete;
+      downloadUrl = await _storageTaskSnapshot.ref.getDownloadURL();
+
+      Firestore.instance.collection("users").document(userData.documentID)
+      .updateData({
+          'profile_pic_url': downloadUrl,
+        }
+      );
+    }
   }
 
   Future<void> saveUserRecord() async{
@@ -197,7 +328,7 @@ class _EditProfileState extends State<EditProfilePage>{
           userDataSnapshot.documents.isEmpty ||
           (userDataSnapshot.documents.length == 1 && userDataSnapshot.documents[0].documentID == _userID)
         ){
-          databaseReference.collection("users").document(_userID)
+          databaseReference.collection("users").document(userDataSnapshot.documents[0].documentID)
             .updateData({
               'username': _username,
               'fullname': _fullname,
@@ -246,6 +377,16 @@ class _EditProfileState extends State<EditProfilePage>{
       catch(e){
         print(e);
       }
+    }
+  }
+
+  Future<void> signOut(){
+    try{
+      removeUserLogin();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
+    catch(e){
+      print(e);
     }
   }
 }

@@ -1,14 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:greenify/model/event.dart';
+import 'package:greenify/util/session_util.dart';
 
-class EventDetailView extends StatelessWidget {
-  final int idx;
-  EventDetailView(this.idx);
+class EventDetailView extends StatefulWidget {
+  final DocumentSnapshot document;
+  EventDetailView(this.document);
+
+  @override
+  _EventDetailState createState() => _EventDetailState(document);
+}
+
+class _EventDetailState extends State<EventDetailView> {
+  final DocumentSnapshot document;
+  String _userID;
+
+  _EventDetailState(this.document) {
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(eventList[idx].eventName),
+          title: Text(document['name'].toString()),
           backgroundColor: Colors.black,
         ),
         body: Container(
@@ -26,7 +44,7 @@ class EventDetailView extends StatelessWidget {
                           bottomLeft: Radius.circular(5),
                           bottomRight: Radius.circular(5)),
                       image: DecorationImage(
-                          image: NetworkImage(eventList[idx].eventPhotoURL),
+                          image: NetworkImage(document['image_url'].toString()),
                           fit: BoxFit.cover)),
                 ),
                 Container(
@@ -36,7 +54,7 @@ class EventDetailView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Text(
-                          eventList[idx].eventName,
+                          document['name'].toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -51,7 +69,7 @@ class EventDetailView extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        eventList[idx].eventDuration,
+                        document['duration'].toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -62,7 +80,7 @@ class EventDetailView extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
-                        eventList[idx].eventLocation,
+                        document['location'].toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -78,7 +96,7 @@ class EventDetailView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Text(
-                          eventList[idx].eventDesc,
+                          document['description'].toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 18,
@@ -97,7 +115,7 @@ class EventDetailView extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             Text(
-                              eventList[idx].eventPoint.toString(),
+                              document['points'].toString(),
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 18,
@@ -115,7 +133,29 @@ class EventDetailView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(
+                    10.0,
+                  ),
+                  child: new SizedBox(
+                    width: 255.0,
+                    child: RaisedButton(
+                      onPressed: () => {
+                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString(), _userID)
+                      },
+                      padding: EdgeInsets.all(10.0),
+                      color: Colors.white,
+                      child: Text(
+                        'Attend',
+                        style: new TextStyle(
+                          fontSize: 24.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
