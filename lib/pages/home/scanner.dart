@@ -29,17 +29,14 @@ class _QRScannerState extends State<QRScanner> {
 
   _QRScannerState() {
     _animationTimer = Timer.periodic(
-      Duration(milliseconds: 700), 
-      (Timer t) => setState((){
-        _visible = !_visible;
-      })
-    );
+        Duration(milliseconds: 700),
+        (Timer t) => setState(() {
+              _visible = !_visible;
+            }));
 
     getUserLogin().then((val) => setState(() {
           _userID = val;
-        }
-      )
-    );
+        }));
   }
 
   void _goHome() {
@@ -81,34 +78,33 @@ class _QRScannerState extends State<QRScanner> {
                           });
                           int points;
                           getUserByAuthUID(_userID).then((val) => {
-                            points = int.tryParse(val['points']) + 35,
-                            Firestore.instance.collection('users').document(val.documentID)
-                              .updateData({
-                                'points': points
-                              }),
-                            Alert(
-                              context: context,
-                              type: AlertType.success,
-                              title: "Succesful",
-                              desc: "Succesful redeemed 35 GPs",
-                              buttons: [
-                                DialogButton(
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  onPressed: () => _goHome(),
-                                  width: 120,
-                                )
-                              ],
-                            ).show(),
-                            sendNotification(
-                              'QR Scanner', 
-                              'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!',
-                              _userID
-                            )
-                          });
+                                points = val.data['points'] + 35,
+                                Firestore.instance
+                                    .collection('users')
+                                    .document(val.documentID)
+                                    .updateData({'points': points}),
+                                Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Succesful",
+                                  desc: "Succesful redeemed 35 GPs",
+                                  buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () => _goHome(),
+                                      width: 120,
+                                    )
+                                  ],
+                                ).show(),
+                                sendNotification(
+                                    'QR Scanner',
+                                    'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!',
+                                    _userID)
+                              });
                         }
                       } on FormatException {
                         _goHome();
@@ -151,9 +147,3 @@ class _QRScannerState extends State<QRScanner> {
     );
   }
 }
-
-final PageRouteBuilder _homeRoute = new PageRouteBuilder(
-  pageBuilder: (BuildContext context, _, __) {
-    return HomePage();
-  },
-);
