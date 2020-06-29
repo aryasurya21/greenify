@@ -29,3 +29,11 @@ Future<DocumentSnapshot> getUserByUsername(String username) async{
   QuerySnapshot data = await user.getDocuments();
   return data.documents[0];
 }
+
+Future<void> sendNotification(String title, String description) async{
+  Firestore.instance.collection('notifications').document()
+    .setData({
+      'title': title,
+      'description': description
+    });
+}

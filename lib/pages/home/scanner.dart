@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenify/pages/home.dart';
+import 'package:greenify/util/session_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class QRScanner extends StatefulWidget {
@@ -13,7 +15,7 @@ class QRScanner extends StatefulWidget {
 }
 
 class _QRScannerState extends State<QRScanner> {
-  String barcode = "";
+  String barcode = "", _userID;
   bool _visible = true;
 
   Timer _animationTimer;
@@ -31,6 +33,12 @@ class _QRScannerState extends State<QRScanner> {
       (Timer t) => setState((){
         _visible = !_visible;
       })
+    );
+
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }
+      )
     );
   }
 
@@ -71,23 +79,35 @@ class _QRScannerState extends State<QRScanner> {
                           setState(() {
                             this.barcode = barcode;
                           });
-                          Alert(
-                            context: context,
-                            type: AlertType.success,
-                            title: "Succesful",
-                            desc: "Succesful redeemed 35 GPs",
-                            buttons: [
-                              DialogButton(
-                                child: Text(
-                                  "OK",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => _goHome(),
-                                width: 120,
-                              )
-                            ],
-                          ).show();
+                          int points;
+                          getUserByAuthUID(_userID).then((val) => {
+                            points = int.tryParse(val['points']) + 35,
+                            Firestore.instance.collection('users').document(val.documentID)
+                              .updateData({
+                                'points': points
+                              }),
+                            Alert(
+                              context: context,
+                              type: AlertType.success,
+                              title: "Succesful",
+                              desc: "Succesful redeemed 35 GPs",
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => _goHome(),
+                                  width: 120,
+                                )
+                              ],
+                            ).show(),
+                            sendNotification(
+                              'QR Scanner', 
+                              'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!'
+                            )
+                          });
                         }
                       } on FormatException {
                         _goHome();
