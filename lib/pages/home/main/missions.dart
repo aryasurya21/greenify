@@ -26,44 +26,34 @@ class _MissionsState extends State<Missions> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10)),
-        color: Color.fromRGBO(63, 63, 63, 1),
-      ),
-      width: MediaQuery.of(context).size.width - 20,
-      child: Padding(
-        padding: EdgeInsets.only(left: 15, top: 15),
-        child: Column(
-          children: <Widget>[
-            _missionHeader(),
-            _missionList()
-          ]
-        )
-      )
-    );
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          color: Color.fromRGBO(63, 63, 63, 1),
+        ),
+        width: MediaQuery.of(context).size.width - 20,
+        child: Padding(
+            padding: EdgeInsets.only(left: 15, top: 15),
+            child:
+                Column(children: <Widget>[_missionHeader(), _missionList()])));
   }
 
   Widget _missionList() {
     return Container(
-      padding: EdgeInsets.only(left: 0, top: 0),
-      child: new StreamBuilder(
-        stream: Firestore.instance.collection('missions').snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return new Container();
-          return Column(
-            children: <Widget>[
-              _missionItem(snapshot.data.documents[0]),
-              _missionItem(snapshot.data.documents[1]),
-              _missionItem(snapshot.data.documents[2])
-            ]
-          );
-        }
-      )
-    );
+        padding: EdgeInsets.only(left: 0, top: 0),
+        child: new StreamBuilder(
+            stream: Firestore.instance.collection('missions').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return new Container();
+              return Column(children: <Widget>[
+                _missionItem(snapshot.data.documents[0]),
+                _missionItem(snapshot.data.documents[1]),
+                _missionItem(snapshot.data.documents[2])
+              ]);
+            }));
   }
 
   Widget _missionHeader() {
@@ -117,7 +107,7 @@ class _MissionsState extends State<Missions> {
                     textScaleFactor: 1.3,
                   ),
                   Text(
-                    document['base_points'].toString(),
+                    document['base_points'].toString() + " GP",
                     textScaleFactor: 0.9,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
