@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:greenify/util/session_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Notifications extends StatefulWidget {
@@ -10,6 +11,16 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  String _userID;
+
+  _NotificationsState() {
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +33,9 @@ class _NotificationsState extends State<Notifications> {
   Container _listView() {
     return Container(
         child: new StreamBuilder(
-        stream: Firestore.instance.collection('notifications').snapshots(),
+        stream: Firestore.instance.collection('notifications')
+          .where('user_id', isEqualTo: _userID)
+          .snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return new Container();
           return ListView.builder(

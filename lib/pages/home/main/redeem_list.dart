@@ -33,7 +33,10 @@ class _RedeemListState extends State<RedeemList> {
   Container _listView() {
     return Container(
       child: StreamBuilder(
-        stream: Firestore.instance.collection('redeemables').where('is_redeemed', isEqualTo: false).snapshots(),
+        stream: Firestore.instance.collection('redeemables')
+          .where('is_redeemed', isEqualTo: false)
+          .where('user_id', isEqualTo: _userID)
+          .snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return new Container();
           return ListView.builder(
@@ -140,7 +143,8 @@ class _RedeemListState extends State<RedeemList> {
       ).show(),
       sendNotification(
         document['title'], 
-        'You\'ve got ' + document['points'].toString() + ' points for scanning your plasticless grocery receipt! Great job!'
+        'You\'ve got ' + document['points'].toString() + ' points for scanning your plasticless grocery receipt! Great job!',
+        _userID
       )
     });
   }

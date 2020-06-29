@@ -30,19 +30,21 @@ Future<DocumentSnapshot> getUserByUsername(String username) async{
   return data.documents[0];
 }
 
-Future<void> sendNotification(String title, String description) async{
+Future<void> sendNotification(String title, String description, String userID) async{
   Firestore.instance.collection('notifications').document()
     .setData({
       'title': title,
-      'description': description
+      'description': description,
+      'user_id': userID
     });
 }
 
-Future<void> sendRedeemable(String title, int points, String description) async{
+Future<void> sendRedeemable(String title, int points, String description, String userID) async{
   Firestore.instance.collection('redeemables').document()
     .setData({
       'title': title,
       'points': points,
-      'description': description
+      'description': description,
+      'user_id': userID
     });
 }

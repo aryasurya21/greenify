@@ -105,7 +105,8 @@ class _QRScannerState extends State<QRScanner> {
                             ).show(),
                             sendNotification(
                               'QR Scanner', 
-                              'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!'
+                              'You\'ve got 35 points for scanning your plasticless grocery receipt! Great job!',
+                              _userID
                             )
                           });
                         }

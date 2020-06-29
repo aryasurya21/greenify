@@ -2,9 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/util/session_util.dart';
 
-class EventDetailView extends StatelessWidget {
+class EventDetailView extends StatefulWidget {
   final DocumentSnapshot document;
   EventDetailView(this.document);
+
+  @override
+  _EventDetailState createState() => _EventDetailState(document);
+}
+
+class _EventDetailState extends State<EventDetailView> {
+  final DocumentSnapshot document;
+  String _userID;
+
+  _EventDetailState(this.document) {
+    getUserLogin().then((val) => setState(() {
+          _userID = val;
+        }
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +143,7 @@ class EventDetailView extends StatelessWidget {
                     width: 255.0,
                     child: RaisedButton(
                       onPressed: () => {
-                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString())
+                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString(), _userID)
                       },
                       padding: EdgeInsets.all(10.0),
                       color: Colors.white,
