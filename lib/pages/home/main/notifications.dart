@@ -37,6 +37,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget _missionItem(DocumentSnapshot document) {
     return Container(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
