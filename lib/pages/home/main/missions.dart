@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/main/mission/list.dart';
+import 'package:greenify/util/session_util.dart';
 
 class Missions extends StatefulWidget {
   Missions({Key key}) : super(key: key);
@@ -10,6 +11,18 @@ class Missions extends StatefulWidget {
 }
 
 class _MissionsState extends State<Missions> {
+  String _userID;
+  String _userDocRefrence;
+
+  _MissionsState() {
+    getUserLogin().then((val) => setState(() {
+      _userID = val;
+      getUserByAuthUID(_userID).then((val) => setState((){
+        _userDocRefrence = val.documentID;
+      }));
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -117,11 +130,30 @@ class _MissionsState extends State<Missions> {
                   ),
                   SizedBox(height: 10),
                   Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: new StreamBuilder(
+                      stream: Firestore.instance
+                        .collection('users')
+                        .document(_userDocRefrence)
+                        .collection('missions')
+                        .where('mission_id', isEqualTo: document.documentID)
+                        .snapshots(),
+                      builder: (context, snapshot){
+                        if(!snapshot.hasData || snapshot.data.documents.length == 0) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: _progress(0, 5)
+                          );
+                        }
+                        return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: _progress(2, 5)))
+                          children: _progress(snapshot.data.documents[0]['progress'], 5)
+                        );
+                      }
+                    )
+                  )
                 ],
               )),
             ],
