@@ -5,10 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/auth/login.dart';
-import 'package:greenify/pages/home/main.dart';
 import 'package:greenify/util/session_util.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -16,8 +16,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfilePage>{
-  String _userID = "";
-  String _username, _fullname, _phone, _profilePictureUrl = "";
+  String _userID = "", _userRef, _username, _fullname, _phone, _profilePictureUrl = "";
   bool _uploadingImage = false;
 
   var _usernameController = TextEditingController();
@@ -31,6 +30,7 @@ class _EditProfileState extends State<EditProfilePage>{
     getUserLogin().then((authId) => 
       getUserByAuthUID(authId).then((val) => setState((){
         _userID = authId;
+        _userRef = val.documentID;
         if(val.data.containsKey('username')){
           _usernameController.text = val['username'];
           _fullnameController.text = val['fullname'];
@@ -237,7 +237,13 @@ class _EditProfileState extends State<EditProfilePage>{
                     child: new SizedBox(
                       width: 255.0,
                       child: RaisedButton(
-                        onPressed: saveUserRecord,
+                        onPressed: () => {
+                          saveUserRecord().then((_){
+                            setState(() {
+                              _uploadingImage = false; 
+                            });
+                          }),
+                        },
                         padding: EdgeInsets.all(13.0),
                         color: Colors.white,
                         child: Text(
@@ -326,56 +332,72 @@ class _EditProfileState extends State<EditProfilePage>{
         // Or if the document that uses that document is the user itself
         if(
           userDataSnapshot.documents.isEmpty ||
-          (userDataSnapshot.documents.length == 1 && userDataSnapshot.documents[0].documentID == _userID)
+          (userDataSnapshot.documents.length == 1 && userDataSnapshot.documents[0].documentID == _userRef)
         ){
-          databaseReference.collection("users").document(userDataSnapshot.documents[0].documentID)
+          await databaseReference.collection("users").document(_userRef)
             .updateData({
               'username': _username,
               'fullname': _fullname,
               'phone': _phone,
             }
           );
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+          
+          Alert(
+            context: context,
+            type: AlertType.success,
+            title: "Success",
+            desc:
+                "Successfully updated profile!",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
         }
         else{
-          return showDialog<void>(
+          Alert(
             context: context,
-            barrierDismissible: false, // user must tap button!
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  'Error',
-                  style: new TextStyle(
-                    color: Colors.red[600],
-                  ),
+            type: AlertType.error,
+            title: "Failed",
+            desc:
+                "Username has been used!\nPlease enter another one.",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text('Username has been used!\nPlease enter another one.'),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'Close',
-                      style: new TextStyle(
-                        color: Colors.red[600],
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
         }
       }
       catch(e){
-        print(e);
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Failed",
+          desc:
+              "Error: " + e.message.toString(),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "OK",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
       }
     }
   }
