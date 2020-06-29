@@ -45,6 +45,7 @@ Future<void> sendRedeemable(String title, int points, String description, String
       'title': title,
       'points': points,
       'description': description,
-      'user_id': userID
+      'user_id': userID,
+      'is_redeemed': false
     });
 }
