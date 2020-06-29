@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/util/session_util.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EventDetailView extends StatefulWidget {
   final DocumentSnapshot document;
@@ -143,7 +144,24 @@ class _EventDetailState extends State<EventDetailView> {
                     width: 255.0,
                     child: RaisedButton(
                       onPressed: () => {
-                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString(), _userID)
+                        sendRedeemable(document['name'].toString(), document['points'], document['description'].toString(), _userID),
+                        Alert(
+                          context: context,
+                          type: AlertType.success,
+                          title: "You are in attendance!",
+                          desc:
+                              "Welcome to " + document['name'].toString() + "!",
+                          buttons: [
+                            DialogButton(
+                              child: Text(
+                                "OK",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                            )
+                          ],
+                        ).show(),
                       },
                       padding: EdgeInsets.all(10.0),
                       color: Colors.white,
