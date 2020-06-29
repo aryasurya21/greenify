@@ -1,17 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:greenify/pages/home/event/card/detail.dart';
-import 'package:greenify/model/event.dart';
 
 class EventDetailCard extends StatelessWidget {
-  final int idx;
-  EventDetailCard(this.idx);
+  final DocumentSnapshot document;
+  EventDetailCard(this.document);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EventDetailView(this.idx)));
+            MaterialPageRoute(builder: (context) => EventDetailView(this.document)));
       },
       child: Column(
         children: <Widget>[
@@ -34,7 +34,7 @@ class EventDetailCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        truncateTitle(eventList[idx].eventName),
+                        truncateTitle(document['name'].toString()),
                         style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w100,
@@ -45,7 +45,7 @@ class EventDetailCard extends StatelessWidget {
                         width: 170,
                         margin: const EdgeInsets.only(right: 20),
                         child: Text(
-                          truncateDesc(eventList[idx].eventDesc),
+                          truncateDesc(document['description'].toString()),
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w100,

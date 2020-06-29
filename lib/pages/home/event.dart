@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:greenify/model/event.dart';
 import 'event/card.dart';
 
 class EventList extends StatelessWidget {
@@ -23,9 +23,17 @@ class EventList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 10),
                 height: MediaQuery.of(context).size.height - 90,
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: ListView.builder(
-                    itemCount: eventList.length,
-                    itemBuilder: (ctx, i) => EventDetailCard(i)),
+                child: new StreamBuilder(
+                  stream: Firestore.instance.collection('events').snapshots(),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData) return new Container();
+                    return ListView.builder(
+                      padding: EdgeInsets.all(10),
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) => EventDetailCard(snapshot.data.documents[index]),
+                    );
+                  }
+                )
               ),
               SizedBox(height: 50),
             ],
